@@ -1,0 +1,19 @@
+{
+    "name": "Lumio",
+    "contributors":[
+        {"name": "Patrick Oladimeji", "email":  "<patrick@dustygem.co.uk>"},
+        {"name", "Gerrit Niezen"}
+    ],
+    "description":"Collaborative platform for designing open source medical devices",
+    "version":"0.0.1",
+    "dependencies":{
+        "backbone":"0.9.x",
+        "jquery":"2.x",
+        "requirejs": "2.1.9"
+    },
+    "repository":{
+        "type":"git",
+        "url":"https://github.com/gniezen/Lunio"
+    },
+    "license":"GPL3"
+}
