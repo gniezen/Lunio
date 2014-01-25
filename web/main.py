@@ -1,6 +1,9 @@
-from flask import Flask, request, g, session, redirect, url_for
+from flask import Flask, request, g, session, redirect, url_for, jsonify, Response
 from flask import render_template_string
 from flask.ext.github import GitHub
+from secret_keys import *
+import simplejson as json
+from crossdomain import *
 
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -9,9 +12,7 @@ from sqlalchemy.ext.declarative import declarative_base
 DATABASE_URI = 'sqlite:////tmp/github-flask.db'
 SECRET_KEY = 'development key'
 DEBUG = True
-
-# Set these values
-GITHUB_CALLBACK_URL = 'http://localhost:5000/github-callback'
+GITHUB_CALLBACK_URL = 'http://10.13.239.70:5000/github-callback'
 
 # setup flask
 app = Flask(__name__)
@@ -67,6 +68,10 @@ def index():
 
     return render_template_string(t)
 
+@app.route('/render')
+def render():
+    return "<script src='https://embed.github.com/view/3d/gniezen/openpump/1e25a326496814faada48da5e954004dd9266e9d/extruder_print_all_v3.stl'></script>"
+    
 
 @github.access_token_getter
 def token_getter():
@@ -108,10 +113,42 @@ def logout():
 
 
 @app.route('/user')
+@crossdomain(origin='*')
 def user():
     return str(github.get('user'))
-
-
+    
+@app.route('/projects')
+@crossdomain(origin='*')
+def projects():
+    return json.dumps(github.get('user/repos'))
+    
+@app.route('/comments', methods=['GET', 'POST'])
+@crossdomain(origin='*')
+def getComments():
+    if request.method == 'POST':
+        comment =  request.args.get('comment','')
+        sha = requests.args.get('sha','')
+        #TODO handle post comment
+    
+    if request.method == 'GET':
+        sha = request.args.get('sha','')
+        return json.dumps(github.get('repos/gniezen/openpump/comments'))
+    
+@app.route('/files')
+@crossdomain(origin='*')
+def getFilesForProject():
+    user =  request.args.get('user','')
+    project =  request.args.get('project','')
+    s = ""
+    #for entry in github.get('repos/gniezen/openpump/contents/'):
+    #    s += entry['name'] + "\n"
+    #return s
+    resp = Response(response=json.dumps(github.get('repos/'+str(user)+'/'+str(project)+'/contents/')),
+                        status=200,
+                        mimetype="application/json")
+    return resp
+    
+    
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    app.run(debug=True, host= '0.0.0.0')
