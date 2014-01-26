@@ -30,18 +30,21 @@ define(function (require, exports, module) {
         },
         postComment: function (event) {
             var comment = $("textarea#comment").val();
+            var that = this;
             Ajax.postComment(comment, this._model_data.sha, function (res) {
                 $("textarea#comment").val("");
-                this._model_data.comments.push(res);
-                this.create(this._model_data);
+                that._model_data.comments.push(res);
+                create(that._model_data);
                 console.log(res);
             });
         }
     });
     
+    function create(model) {
+        return new RevisionCommentsView(model);
+    }
+    
     module.exports = {
-        create: function (model) {
-            return new RevisionCommentsView(model);
-        }
+        create: create
     };
 });
