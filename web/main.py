@@ -70,7 +70,7 @@ def index():
 
 @app.route('/render')
 def render():
-    return "<script src='https://embed.github.com/view/3d/gniezen/openpump/1e25a326496814faada48da5e954004dd9266e9d/extruder_print_all_v3.stl'></script>"
+    return "<script src='https://embed.github.com/view/3d/gniezen/openpump/master/extruder_print_all_v3.stl'></script>"
     
 
 @github.access_token_getter
@@ -101,7 +101,7 @@ def authorized(access_token):
 @app.route('/login')
 def login():
     if session.get('user_id', None) is None:
-        return github.authorize()
+        return github.authorize(scope='public_repo')
     else:
         return 'Already logged in'
 
@@ -115,39 +115,71 @@ def logout():
 @app.route('/user')
 @crossdomain(origin='*')
 def user():
-    return str(github.get('user'))
+    return asJson(github.get('user'))
     
 @app.route('/projects')
 @crossdomain(origin='*')
 def projects():
-    return json.dumps(github.get('user/repos'))
+    return asJson(github.get('user/repos'))
     
 @app.route('/comments', methods=['GET', 'POST'])
 @crossdomain(origin='*')
 def getComments():
-    if request.method == 'POST':
-        comment =  request.args.get('comment','')
-        sha = requests.args.get('sha','')
-        #TODO handle post comment
+    user =  request.args.get('user','gniezen')
+    project =  request.args.get('project','openpump')
     
+    if request.method == 'POST':
+        comment =  request.args.get('comment')
+        sha = request.args.get('sha')
+                
+        payload = {'body': comment}
+        return asJson(github.post('repos/'+user+'/'+project+'/commits/'+sha+'/comments', payload))
+        
     if request.method == 'GET':
         sha = request.args.get('sha','')
-        return json.dumps(github.get('repos/gniezen/openpump/comments'))
-    
+        
+        if sha=='':
+            return asJson(github.get('repos/'+user+'/'+project+'/comments'))
+        else:
+            return asJson(github.get('repos/'+user+'/'+project+'/commits/'+sha+'/comments'))
+            
 @app.route('/files')
 @crossdomain(origin='*')
 def getFilesForProject():
-    user =  request.args.get('user','')
-    project =  request.args.get('project','')
+    user =  request.args.get('user','gniezen')
+    project =  request.args.get('project','openpump')
     s = ""
     #for entry in github.get('repos/gniezen/openpump/contents/'):
     #    s += entry['name'] + "\n"
     #return s
-    resp = Response(response=json.dumps(github.get('repos/'+str(user)+'/'+str(project)+'/contents/')),
+
+    return asJson(github.get('repos/'+str(user)+'/'+str(project)+'/contents/'))
+    
+@app.route('/file')
+@crossdomain(origin='*')
+def getFile():
+    user =  request.args.get('user','gniezen')
+    project =  request.args.get('project','openpump')
+    path = request.args.get('path')
+    
+    return asJson(github.get('repos/'+user+'/'+project+'/contents/'+path))
+    
+@app.route('/revisions')
+@crossdomain(origin='*')
+def getRevisions():
+    user =  request.args.get('user','gniezen')
+    project =  request.args.get('project','openpump')
+    path = request.args.get('path')
+
+    return asJson(github.get('repos/gniezen/openpump/commits?path='+path))
+    
+
+
+def asJson(dump):
+    resp = Response(response=json.dumps(dump),
                         status=200,
                         mimetype="application/json")
     return resp
-    
     
 if __name__ == '__main__':
     init_db()
