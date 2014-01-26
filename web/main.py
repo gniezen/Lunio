@@ -129,9 +129,10 @@ def getComments():
     project =  request.args.get('project','openpump')
     
     if request.method == 'POST':
-        comment =  request.args.get('comment')
-        sha = request.args.get('sha')
-                
+        #comment =  request.args.get('comment')
+        #sha = request.args.get('sha')
+        comment = request.form['comment']
+        sha = request.form['sha']       
         payload = {'body': comment}
         return asJson(github.post('repos/'+user+'/'+project+'/commits/'+sha+'/comments', payload))
         
@@ -142,7 +143,8 @@ def getComments():
             return asJson(github.get('repos/'+user+'/'+project+'/comments'))
         else:
             return asJson(github.get('repos/'+user+'/'+project+'/commits/'+sha+'/comments'))
-            
+
+ 
 @app.route('/files')
 @crossdomain(origin='*')
 def getFilesForProject():
@@ -152,8 +154,19 @@ def getFilesForProject():
     #for entry in github.get('repos/gniezen/openpump/contents/'):
     #    s += entry['name'] + "\n"
     #return s
+    
+    r = github.get('repos/'+str(user)+'/'+str(project)+'/contents/')
 
-    return asJson(github.get('repos/'+str(user)+'/'+str(project)+'/contents/'))
+    for i in r:
+        if 'README.md' in i.values():
+            r.remove(i)
+    
+        # if ''
+        #     path = 
+        #     r = github.raw_request('GET','repos/'+user+'/'+project+'/contents/'+path, headers={'Accept':'application/vnd.github.v3.raw'})            
+        #     i['text'] = r.text
+    
+    return asJson(r)
     
 @app.route('/file')
 @crossdomain(origin='*')
@@ -161,8 +174,8 @@ def getFile():
     user =  request.args.get('user','gniezen')
     project =  request.args.get('project','openpump')
     path = request.args.get('path')
-    
-    return asJson(github.get('repos/'+user+'/'+project+'/contents/'+path))
+    r = github.raw_request('GET','repos/'+user+'/'+project+'/contents/'+path, headers={'Accept':'application/vnd.github.v3.raw'})
+    return r.text
     
 @app.route('/revisions')
 @crossdomain(origin='*')
