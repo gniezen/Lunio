@@ -6,9 +6,9 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
 /*global define, d3, require, $, brackets, window, MouseEvent */
 require.config({
-    baseUrl: "../../client/lib",
+    baseUrl: "lib",
     paths: {
-        app: "../../client/app"
+        app: "../app"
     }
 });
 
