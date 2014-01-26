@@ -31,6 +31,7 @@ define(function (require, exports, module) {
         postComment: function (event) {
             var comment = $("textarea#comment").val();
             Ajax.postComment(comment, this._model_data.sha, function (res) {
+             $("textarea#comment").val("");
                 console.log(res);
             });
         }

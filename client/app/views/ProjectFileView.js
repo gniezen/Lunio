@@ -43,6 +43,8 @@ define(function (require, exports, module) {
         },
         getRevisions: function (event) {
             var model = this._model_data;
+            //clear revisions and comments
+            d3.selectAll("#content-revisions, #content-comments").html("");
             Ajax.getRevisions(model.path, function (revisions) {
                 FileRevisionsView.create({path: model.path, revisions: revisions});
             });

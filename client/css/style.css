@@ -10,11 +10,11 @@ img.preview {
 }
 
 .half-column {
-    width: 49.99%;   
+    width: 49%;
 }
 
 .thirds-column {
-    width: 33.4%;   
+    width: 32%;   
 }
 
 #content {
@@ -40,5 +40,17 @@ img.preview {
 }*/
 
 #header a {
-    padding: 15px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+a img {
+    width:90px;
+    height: auto;
+}
+
+.column {
+    width:30%;
+    margin-right: 5px;
 }
