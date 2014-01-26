@@ -15,7 +15,7 @@ DEBUG = True
 GITHUB_CALLBACK_URL = 'http://10.13.239.70:5000/github-callback'
 
 # setup flask
-app = Flask(__name__)
+app = Flask(__name__,static_folder='../client',static_url_path='/app')
 app.config.from_object(__name__)
 github = GitHub(app)
 
