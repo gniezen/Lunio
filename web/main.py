@@ -15,7 +15,7 @@ DEBUG = True
 GITHUB_CALLBACK_URL = 'http://10.13.239.70:5000/github-callback'
 
 # setup flask
-app = Flask(__name__,static_folder='../client',static_url_path='/app')
+app = Flask(__name__,static_folder='../client',static_url_path='/lunio')
 app.config.from_object(__name__)
 github = GitHub(app)
 
@@ -161,10 +161,12 @@ def getFilesForProject():
         if 'README.md' in i.values():
             r.remove(i)
     
-        # if ''
-        #     path = 
-        #     r = github.raw_request('GET','repos/'+user+'/'+project+'/contents/'+path, headers={'Accept':'application/vnd.github.v3.raw'})            
-        #     i['text'] = r.text
+        for val in i.values():
+            if str(val).endswith('.ino'):
+                path = i['path']
+                req = github.raw_request('GET','repos/'+user+'/'+project+'/contents/'+path, headers={'Accept':'application/vnd.github.v3.raw'})            
+                i['text'] = req.text.replace('\n','<br />')
+                print i['text']
     
     return asJson(r)
     
