@@ -11,10 +11,10 @@ define(function (require, exports, module) {
         Ajax            = require("app/model/Ajax");
     
    
-//    var projectFiles = Ajax.getFiles({user: "gniezen", project: "openpump"}, function (data) {
-//        data.forEach(function (file) {
-//            ProjectFileView.create(file);
-//        });
-//    });
-//    
+    var projectFiles = Ajax.getFiles({user: "gniezen", project: "openpump"}, function (data) {
+        data.forEach(function (file) {
+            ProjectFileView.create(file);
+        });
+    });
+    
 });

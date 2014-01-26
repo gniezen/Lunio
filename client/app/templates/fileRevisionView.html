@@ -1,4 +1,5 @@
-<div class="panel panel-default project-file-view">
+{{#each revisions}}
+<div class="panel panel-default file-revision-view" sha={{sha}} data-index={{data_index}}>
     <div class="panel-header">
         <span class="text-muted">{{name}}</span>
     </div>
@@ -21,3 +22,4 @@
     </div>
     <div class="panel-footer"></div>
 </div>
+{{/each}}

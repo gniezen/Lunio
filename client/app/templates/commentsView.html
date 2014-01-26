@@ -1,0 +1,15 @@
+<div>
+    <textarea class="form-control" rows="3" id="comment"></textarea>
+    <button type="submit" class="btn btn-default" id="post-comment">Submit</button>
+</div>
+{{#each comments}}
+<div class="media">
+  <a class="pull-left" href="#">
+    <img class="media-object" src="{{user.avatar_url}}" alt="...">
+  </a>
+  <div class="media-body">
+    <h4 class="media-heading">{{created_at}}</h4>
+      {{body}}
+  </div>
+</div>
+{{/each}}

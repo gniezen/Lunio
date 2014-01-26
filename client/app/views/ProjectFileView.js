@@ -7,19 +7,16 @@
 /*global define, d3, require, $, brackets, Handlebars, Backbone, document */
 define(function (require, exports, module) {
     "use strict";
-    var template = require("text!app/templates/projectFileView.html");
-    var imageExts = ["jpg", "png", "jpeg", "gif"],
-        threeDExts = ["stl"];
+    var template = require("text!app/templates/projectFileView.html"),
+        Ajax     = require("app/model/Ajax"),
+        FileRevisionsView = require("app/views/FileRevisionsView"),
+        FileUtils = require("app/utils/FileUtils");
     
-    function fileType(file) {
-        var ext = file.split(".").slice(-1).join("");
-        return imageExts.indexOf(ext) > -1 ? "image" : threeDExts.indexOf(ext) > -1 ? "3d" : "other";
-    }
-    
+    var container = "#content-files";
     var ProjectFileView = Backbone.View.extend({
         initialize: function (model) {
             //update model with type info and create image url or embed 3d github file preview as appropriate
-            var t = fileType(model.name);
+            var t = FileUtils.getFileType(model.name);
             model.type = t;
             if (t === "image") {
                 model.image_src = model.html_url.replace("blob", "raw");
@@ -31,17 +28,24 @@ define(function (require, exports, module) {
             } else {
                 model.other = true;
             }
-            
+            //save a reference to the model
+            this._model_data = model;
             this.render(model);
         },
         render: function (model) {
             var content = Handlebars.compile(template);
             this.$el.html(content(model));
-            if (model.threeD) {
-                d3.select(this.el).append("iframe").attr("src", "https://render.github.com/view/3d?url=https://raw.github.com/gniezen/openpump/master/extruder_print_all_v3.stl");
-            }
-            $("body").append(this.el);
+            $(container).append(this.el);
             return this;
+        },
+        events: {
+            "click": "getRevisions"
+        },
+        getRevisions: function (event) {
+            var model = this._model_data;
+            Ajax.getRevisions(model.path, function (revisions) {
+                FileRevisionsView.create({path: model.path, revisions: revisions});
+            });
         }
     });
     

@@ -40,15 +40,18 @@ define(function (require, exports, module) {
         });
     }
     
-    function getVersions(file) {
-        
+    function getRevisions(path, cb) {
+        $.getJSON(serverUrl + "revisions", {path: path}, function (data) {
+            if (cb && typeof cb === "function") {
+                cb(data);
+            }
+        });
     }
-    
     
     module.exports = {
         getFiles: getFiles,
         getComments: getComments,
         postComment: postComment,
-        getVersions: getVersions
+        getRevisions: getRevisions
     };
 });
