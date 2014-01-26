@@ -12,6 +12,7 @@ define(function (require, exports, module) {
     
    
     var projectFiles = Ajax.getFiles({user: "gniezen", project: "openpump"}, function (data) {
+        $("#content-files").html("");
         data.forEach(function (file) {
             ProjectFileView.create(file);
         });

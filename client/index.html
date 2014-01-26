@@ -12,6 +12,7 @@
         <script src="lib/backbone.js" type="application/javascript"></script>
         <script src="lib/handlebars-v1.1.0.js" type="application/javascript"></script>
         <script src="lib/bootstrap.js" type="application/javascript"></script>
+        <script src="lib/ace.js" type="application/javascript"></script>
         <script type="application/javascript" src="lib/require.js" data-main="index.js"></script>
         
         <link rel="stylesheet" href="css/bootstrap.css"/>
@@ -19,17 +20,20 @@
         <link rel="stylesheet" href="css/style.css"/>
     </head>
     <body>
+        <div id="header">
+            <a class="pull-right"><img src="../small_logo.png"></a>
+        </div>
         <div id="content" class="row">
-            <div class="col-md-8">
+            <div class="two-thirds-column pull-left">
                 <div id="content-files" class="half-column pull-left">
-            
+                    <p class="text-center" class="loading">Loading files ...</p>
                 </div>
                 <div id="content-revisions" class="half-column pull-right">
                 
                 </div>
             </div>
             
-            <div id="content-comments" class="third-column pull-right col-md-4">
+            <div id="content-comments" class="thirds-column pull-right">
             
             </div> 
         </div>

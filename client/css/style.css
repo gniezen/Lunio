@@ -13,11 +13,32 @@ img.preview {
     width: 49.99%;   
 }
 
-.third-column {
-    width: 33.3%;   
+.thirds-column {
+    width: 33.4%;   
 }
 
 #content {
     width: 95%;
     padding: 10px;
+}
+
+#header {
+    height:50px;
+}
+
+.text-content {
+    overflow-y:scroll;
+    height:150px;
+}
+
+.two-thirds-column {
+    width: 66.6%
+}
+
+/*.project-file-view #preview{
+    padding:0;!important
+}*/
+
+#header a {
+    padding: 15px;
 }

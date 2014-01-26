@@ -13,11 +13,16 @@
             <iframe class="threed preview" src="https://render.github.com/view/3d?url=https://raw.github.com/{{threed_path}}"></iframe>
         </div>
         {{/if}}
-        {{# if other}}
-        <div>
-        
+        {{# if text}}
+        <div class="text-content" id="texteditor">
+            {{text}}
+            <script>
+                ace.edit("texteditor");
+            </script>
         </div>
         {{/if}}
     </div>
+<!--
     <div class="panel-footer"></div>
+-->
 </div>
