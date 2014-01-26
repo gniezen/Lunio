@@ -165,19 +165,9 @@ def getFilesForProject():
             if str(val).endswith('.ino'):
                 path = i['path']
                 req = github.raw_request('GET','repos/'+user+'/'+project+'/contents/'+path, headers={'Accept':'application/vnd.github.v3.raw'})            
-                i['text'] = req.text.replace('\n','<br />')
-                print i['text']
+                i['text'] = req.text
     
     return asJson(r)
-    
-@app.route('/file')
-@crossdomain(origin='*')
-def getFile():
-    user =  request.args.get('user','gniezen')
-    project =  request.args.get('project','openpump')
-    path = request.args.get('path')
-    r = github.raw_request('GET','repos/'+user+'/'+project+'/contents/'+path, headers={'Accept':'application/vnd.github.v3.raw'})
-    return r.text
     
 @app.route('/revisions')
 @crossdomain(origin='*')
