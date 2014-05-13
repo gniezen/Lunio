@@ -12,7 +12,7 @@ from sqlalchemy.ext.declarative import declarative_base
 DATABASE_URI = 'sqlite:////tmp/github-flask.db'
 SECRET_KEY = 'development key'
 DEBUG = True
-GITHUB_CALLBACK_URL = 'http://10.13.239.70:5000/github-callback'
+GITHUB_CALLBACK_URL = 'http://localhost:5000/github-callback'
 
 # setup flask
 app = Flask(__name__,static_folder='../client',static_url_path='/lunio')
@@ -57,6 +57,7 @@ def after_request(response):
 
 
 @app.route('/')
+@crossdomain(origin='*')
 def index():
     if g.user:
         t = 'Hello! <a href="{{ url_for("user") }}">Get user</a> ' \
@@ -69,6 +70,7 @@ def index():
     return render_template_string(t)
 
 @app.route('/render')
+@crossdomain(origin='*')
 def render():
     return "<script src='https://embed.github.com/view/3d/gniezen/openpump/master/extruder_print_all_v3.stl'></script>"
     
@@ -82,6 +84,7 @@ def token_getter():
 
 @app.route('/github-callback')
 @github.authorized_handler
+@crossdomain(origin='*')
 def authorized(access_token):
     next_url = request.args.get('next') or url_for('index')
     if access_token is None:
@@ -99,6 +102,7 @@ def authorized(access_token):
 
 
 @app.route('/login')
+@crossdomain(origin='*')
 def login():
     if session.get('user_id', None) is None:
         return github.authorize(scope='public_repo')
@@ -107,6 +111,7 @@ def login():
 
 
 @app.route('/logout')
+@crossdomain(origin='*')
 def logout():
     session.pop('user_id', None)
     return redirect(url_for('index'))
@@ -176,7 +181,7 @@ def getRevisions():
     project =  request.args.get('project','openpump')
     path = request.args.get('path')
 
-    return asJson(github.get('repos/gniezen/openpump/commits?path='+path))
+    return asJson(github.get('repos/gniezen/openpump/commits?path='+str(path)))
     
 
 

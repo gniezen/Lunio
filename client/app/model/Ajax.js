@@ -7,7 +7,7 @@
 /*global define, d3, require, $, brackets, window, MouseEvent */
 define(function (require, exports, module) {
     "use strict";
-    var serverUrl = "http://10.13.239.70:5000/";
+    var serverUrl = "http://localhost:5000/";
     
     function getFiles(obj, cb) {
         var req = serverUrl + "files";
